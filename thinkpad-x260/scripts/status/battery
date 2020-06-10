@@ -1,0 +1,56 @@
+#!/bin/sh
+
+## Battery level output
+
+PWRSPLY_PATH="/sys/class/power_supply"
+
+is_AC() {
+    [ $(cat "$PWRSPLY_PATH/AC/online") -eq 1 ]
+}
+
+is_present() {
+    [ -d "$PWRSPLY_PATH/BAT$1" ]
+}
+
+is_full() {
+    [ "$(get_status $1)" = "Full" ]
+}
+
+is_charging() {
+    [ "$(get_status $1)" = "Charging" ] || [ "$(get_status $1)" = "Unknown" ]
+}
+
+is_depleted() {
+    [ $(get_capacity $1) -le 5 ]
+}
+
+get_capacity() {
+    cat "$PWRSPLY_PATH/BAT$1/capacity"
+}
+
+get_status() {
+    cat "$PWRSPLY_PATH/BAT$1/status"
+}
+
+BAT=1
+LABEL="BAT"
+
+if ! is_present $BAT || is_depleted $BAT ; then
+    BAT=0
+    LABEL="AUX"
+fi
+
+LABEL="$LABEL:"
+VALUE="$(get_capacity $BAT)%"
+
+if is_depleted $BAT; then
+    LABEL="!$LABEL"
+elif is_full $BAT && is_AC; then
+    LABEL="AC"
+    VALUE=""
+elif is_charging $BAT; then
+    LABEL="*$LABEL"
+fi
+
+echo "$LABEL$VALUE"
+
