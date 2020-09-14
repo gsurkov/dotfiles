@@ -1,13 +1,13 @@
 -- Simple theme mimicking dwm for debugging purposes
 
-local xresources = require("beautiful.xresources")
+local theme_assets = require("beautiful.theme_assets")
+local dpi = require("beautiful.xresources").apply_dpi
 local fs = require("gears.filesystem")
-local dpi = xresources.apply_dpi
+local myutil = require("myutil")
 
 local theme = {}
 
 theme.wallpaper = fs.get_configuration_dir() .. "themes/dwm/wallpaper.jpg"
-print(theme.wallpaper)
 
 theme.font_family = "Hack"
 theme.font_size = 10
@@ -29,5 +29,15 @@ theme.wibar_height = dpi(20)
 
 theme.taglist_margin = dpi(9)
 theme.separator_margin = dpi(6)
+
+local taglist_square_size = dpi(4)
+local taglist_square_margin = dpi(2)
+
+theme.taglist_squares_sel = myutil.taglist_squares_sel(
+    taglist_square_size, taglist_square_margin, theme.fg_focus
+)
+theme.taglist_squares_unsel = myutil.taglist_squares_unsel(
+    taglist_square_size, taglist_square_margin, theme.fg_normal
+)
 
 return theme

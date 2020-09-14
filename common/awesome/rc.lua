@@ -83,15 +83,18 @@ awful.screen.connect_for_each_screen(function(s)
 
             {
                 -- Inner padding
+                top = 0,
+                bottom = 0,
                 left = beautiful.taglist_margin,
                 right = beautiful.taglist_margin,
+
                 widget = wibox.container.margin,
 
                 {
                     -- Tag name
                     id = "text_role",
                     widget = wibox.widget.textbox
-                }
+                },
             }
         }
     })
