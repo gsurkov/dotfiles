@@ -72,31 +72,9 @@ awful.screen.connect_for_each_screen(function(s)
     awful.tag({"1", "2", "3", "4", "5", "6", "7", "8", "9"}, s, awful.layout.layouts[1])
 
     -- Taglist
-    s.taglist = awful.widget.taglist({
-        screen = s,
+    s.taglist = mywidgets.taglist({
         buttons = taglist_buttons,
-        filter = awful.widget.taglist.filter.all,
-        widget_template = {
-            -- Colored background
-            id = "background_role",
-            widget = wibox.container.background,
-
-            {
-                -- Inner padding
-                top = 0,
-                bottom = 0,
-                left = beautiful.taglist_margin,
-                right = beautiful.taglist_margin,
-
-                widget = wibox.container.margin,
-
-                {
-                    -- Tag name
-                    id = "text_role",
-                    widget = wibox.widget.textbox
-                },
-            }
-        }
+        screen = s
     })
 
     s.panel = awful.wibar({
@@ -104,7 +82,7 @@ awful.screen.connect_for_each_screen(function(s)
         screen = s
     })
 
-    s.layoutbox = mywidgets.layoutbox.new(s)
+    s.layoutbox = mywidgets.layoutbox(s)
 
     s.panel:setup({
         layout = wibox.layout.align.horizontal,
@@ -140,7 +118,6 @@ awful.screen.connect_for_each_screen(function(s)
         }
     })
 
-    s.layoutbox:update()
     awful.tag.attached_connect_signal(s, "property::layout", function() s.layoutbox:update() end)
     awful.tag.attached_connect_signal(s, "property::selected", function() s.layoutbox:update() end)
 
