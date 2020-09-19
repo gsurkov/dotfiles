@@ -2,6 +2,10 @@
 local awful = require("awful")
 local gears = require("gears")
 
+-- Additional 3rd-party widgets
+local lain = require("lain")
+local vicious = require("vicious")
+
 -- Enable autofocus
 local autofocus = require("awful.autofocus")
 
@@ -62,6 +66,8 @@ end
 local separator = mywidgets.separator("|")
 -- local keyboardlayout = awful.widget.keyboardlayout()
 local textclock = wibox.widget.textclock("%a %b %d %H:%M")
+local volume = mywidgets.volume()
+local battery = mywidgets.battery()
 
 -- Configure workspace
 awful.screen.connect_for_each_screen(function(s)
@@ -103,10 +109,13 @@ awful.screen.connect_for_each_screen(function(s)
             {
                 textclock,
                 --keyboardlayout,
-                {
+                { -- Placeholder for an actual wifi widget
                     widget = wibox.widget.textbox,
-                    text = "Test status"
+                    text = "WLAN:-48dBm"
                 },
+
+                volume,
+                battery,
 
                 spacing_widget = separator,
                 spacing = beautiful.separator_margin * 2,
