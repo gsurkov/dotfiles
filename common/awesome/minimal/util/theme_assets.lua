@@ -1,10 +1,11 @@
+-- Various graphics.
 local cairo = require("lgi").cairo
 local surface = require("gears.surface")
 local gears_color = require("gears.color")
 
-local myutil = {}
+local theme_assets = {}
 
-myutil.taglist_squares_sel = function(size, margin, fg)
+theme_assets.taglist_squares_sel = function(size, margin, fg)
     local img = cairo.ImageSurface(cairo.Format.ARGB32, size + margin * 2, size + margin * 2)
     local cr = cairo.Context(img)
 
@@ -15,7 +16,7 @@ myutil.taglist_squares_sel = function(size, margin, fg)
     return img
 end
 
-myutil.taglist_squares_unsel = function(size, margin, fg)
+theme_assets.taglist_squares_unsel = function(size, margin, fg)
     local img = cairo.ImageSurface(cairo.Format.ARGB32, size + margin * 2, size + margin * 2)
     local cr = cairo.Context(img)
     local stroke_width = math.ceil(size / 4)
@@ -29,4 +30,4 @@ myutil.taglist_squares_unsel = function(size, margin, fg)
     return img
 end
 
-return myutil
+return theme_assets

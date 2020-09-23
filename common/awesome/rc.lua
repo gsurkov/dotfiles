@@ -18,6 +18,7 @@ beautiful.init(gears.filesystem.get_configuration_dir() .. "themes/dwm/theme.lua
 
 -- Custom widgets
 local mywidgets = require("mywidgets")
+local minimal = require("minimal")
 
 -- Default applications
 local terminal = "alacritty"
@@ -63,10 +64,10 @@ local function update_layout_indicator(s)
 end
 
 -- Create persistent widgets
-local separator = mywidgets.separator("|")
+local separator = minimal.widget.separator("|")
 -- local keyboardlayout = awful.widget.keyboardlayout()
 local textclock = wibox.widget.textclock("%a %b %d %H:%M")
-local volume = mywidgets.volume()
+local volume = minimal.widget.volume()
 local battery = mywidgets.battery()
 
 -- Configure workspace
@@ -78,25 +79,27 @@ awful.screen.connect_for_each_screen(function(s)
     awful.tag({"1", "2", "3", "4", "5", "6", "7", "8", "9"}, s, awful.layout.layouts[1])
 
     -- Taglist
-    s.taglist = mywidgets.taglist({
+    s.taglist = minimal.widget.taglist {
         buttons = taglist_buttons,
         screen = s
-    })
+    }
 
-    s.panel = awful.wibar({
+    s.panel = awful.wibar {
         position = "top",
         screen = s
-    })
+    }
 
-    s.layoutbox = mywidgets.layoutbox(s)
+    s.layoutbox = minimal.widget.layoutbox {
+        screen = s
+    }
 
-    s.panel:setup({
+    s.panel:setup {
         layout = wibox.layout.align.horizontal,
 
         {
             -- Left widgets
-            s.taglist,
-            s.layoutbox,
+            s.taglist.widget,
+            s.layoutbox.widget,
 
             spacing = beautiful.taglist_margin,
             layout = wibox.layout.fixed.horizontal,
@@ -114,10 +117,10 @@ awful.screen.connect_for_each_screen(function(s)
                     text = "WLAN:-48dBm"
                 },
 
-                volume,
+                volume.widget,
                 battery,
 
-                spacing_widget = separator,
+                spacing_widget = separator.widget,
                 spacing = beautiful.separator_margin * 2,
                 layout = wibox.layout.fixed.horizontal,
             },
@@ -125,7 +128,7 @@ awful.screen.connect_for_each_screen(function(s)
             right = beautiful.separator_margin,
             widget = wibox.container.margin,
         }
-    })
+    }
 
     awful.tag.attached_connect_signal(s, "property::layout", function() s.layoutbox:update() end)
     awful.tag.attached_connect_signal(s, "property::selected", function() s.layoutbox:update() end)

@@ -6,66 +6,6 @@ local lain = require("lain")
 
 local mywidgets = {}
 
-local layoutsymbols = {
-    tile = "[]=",
-    floating = "><>",
-    max = "[M]",
-}
-
-mywidgets.taglist = function(args)
-    t = awful.widget.taglist {
-        screen = args.screen,
-        buttons = args.buttons,
-        filter = awful.widget.taglist.filter.all,
-        widget_template = {
-            -- Colored background
-            id = "background_role",
-            widget = wibox.container.background,
-
-            {
-                -- Inner padding
-                top = 0,
-                bottom = 0,
-                left = beautiful.taglist_margin,
-                right = beautiful.taglist_margin,
-
-                widget = wibox.container.margin,
-
-                {
-                    -- Tag name
-                    id = "text_role",
-                    widget = wibox.widget.textbox
-                },
-            }
-        }
-    }
-
-    return t
-end
-
-mywidgets.layoutbox = function(s)
-    t = wibox.widget.textbox()
-
-    t.update = function(self)
-        local name = awful.layout.getname(awful.layout.get(s))
-        self.text = layoutsymbols[name]
-    end
-
-    t:update()
-
-    return t
-end
-
-mywidgets.separator = function(text)
-    t = wibox.widget {
-        text = text,
-        align = "center",
-        widget = wibox.widget.textbox
-    }
-
-    return t
-end
-
 mywidgets.battery = function()
     local t = lain.widget.bat {
         notify = "off",
@@ -108,19 +48,6 @@ mywidgets.battery = function()
             end
 
             widget:set_markup(string.format(fmt, label, get_capacity(n)))
-        end
-    }
-
-    return t.widget
-end
-
-mywidgets.volume = function()
-    t = lain.widget.pulse {
-        settings = function()
-            local volume = math.floor((tonumber(volume_now.left) + tonumber(volume_now.right)) / 2) .. "%"
-            if volume_now.muted == "yes" then volume = "M" end
-
-            widget:set_markup("VOL:" .. volume)
         end
     }
 

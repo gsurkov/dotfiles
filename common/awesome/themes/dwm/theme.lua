@@ -1,9 +1,8 @@
 -- Simple theme mimicking dwm for debugging purposes
 
-local theme_assets = require("beautiful.theme_assets")
 local dpi = require("beautiful.xresources").apply_dpi
 local fs = require("gears.filesystem")
-local myutil = require("myutil")
+local theme_assets = require("minimal.util.theme_assets")
 
 local theme = {}
 
@@ -35,10 +34,10 @@ theme.separator_margin = dpi(6)
 local taglist_square_size = dpi(4)
 local taglist_square_margin = dpi(2)
 
-theme.taglist_squares_sel = myutil.taglist_squares_sel(
+theme.taglist_squares_sel = theme_assets.taglist_squares_sel(
     taglist_square_size, taglist_square_margin, theme.fg_focus
 )
-theme.taglist_squares_unsel = myutil.taglist_squares_unsel(
+theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
     taglist_square_size, taglist_square_margin, theme.fg_normal
 )
 
