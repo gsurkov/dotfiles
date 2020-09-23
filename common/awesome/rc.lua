@@ -17,7 +17,6 @@ local beautiful = require("beautiful")
 beautiful.init(gears.filesystem.get_configuration_dir() .. "themes/dwm/theme.lua")
 
 -- Custom widgets
-local mywidgets = require("mywidgets")
 local minimal = require("minimal")
 
 -- Default applications
@@ -59,16 +58,20 @@ local function set_wallpaper(s)
     end
 end
 
-local function update_layout_indicator(s)
-    print(awful.layout.getname(awful.layout.get(s)))
-end
-
 -- Create persistent widgets
 local separator = minimal.widget.separator("|")
 -- local keyboardlayout = awful.widget.keyboardlayout()
 local textclock = wibox.widget.textclock("%a %b %d %H:%M")
 local volume = minimal.widget.volume()
-local battery = mywidgets.battery()
+local battery = minimal.widget.battery {
+    devices = {
+        "AC",
+        "BAT0",
+        "BAT1"
+    },
+
+    timeout = 15
+}
 
 -- Configure workspace
 awful.screen.connect_for_each_screen(function(s)
@@ -86,8 +89,8 @@ awful.screen.connect_for_each_screen(function(s)
 
     s.panel = awful.wibar {
         position = "top",
-        screen = s
-    }
+    screen = s
+}
 
     s.layoutbox = minimal.widget.layoutbox {
         screen = s
@@ -118,7 +121,7 @@ awful.screen.connect_for_each_screen(function(s)
                 },
 
                 volume.widget,
-                battery,
+                battery.widget,
 
                 spacing_widget = separator.widget,
                 spacing = beautiful.separator_margin * 2,

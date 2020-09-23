@@ -39,7 +39,9 @@ set mouse=nicr
 set shortmess+=c
 set encoding=utf-8
 set clipboard+=unnamed
-"set signcolumn=yes
+
+" Vertical splits
+hi VertSplit cterm=NONE ctermfg=2
 
 " Disable auto comments
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
