@@ -63,15 +63,7 @@ local separator = minimal.widget.separator("|")
 -- local keyboardlayout = awful.widget.keyboardlayout()
 local textclock = wibox.widget.textclock("%a %b %d %H:%M")
 local volume = minimal.widget.volume()
-local battery = minimal.widget.battery {
-    devices = {
-        "AC",
-        "BAT0",
-        "BAT1"
-    },
-
-    timeout = 15
-}
+local battery = minimal.widget.battery { timeout = 15 }
 
 -- Configure workspace
 awful.screen.connect_for_each_screen(function(s)

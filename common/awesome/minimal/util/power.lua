@@ -1,4 +1,5 @@
 -- Functions for gettin power supply info.
+local spawn = require("awful.spawn")
 local fs = require("gears.filesystem")
 
 local function read_line(path)
@@ -14,31 +15,36 @@ local function read_line(path)
     return str
 end
 
-local function to_ps_path(device)
-    return string.format("/sys/class/power_supply/%s/", device)
+local pspath = "/sys/class/power_supply"
+
+local function to_ps_path(name)
+    return string.format("%s/%s/", pspath, name)
 end
 
-local function to_ps_file(device, filename)
-    return to_ps_path(device) .. filename
+local function to_ps_file(name, filename)
+    return to_ps_path(name) .. filename
 end
 
 local power = {}
 
-function power.request_info(devices, callback)
-    local infos = {}
-    for i, v in ipairs(devices) do
-        if fs.dir_readable(to_ps_path(v)) then
-            table.insert(infos, {
-                name = v,
-                kind = read_line(to_ps_file(v, "type")) or "N/A",
-                status = read_line(to_ps_file(v, "status")) or "N/A",
-                is_online = read_line(to_ps_file(v, "online")) == "1" or false,
-                capacity = tonumber(read_line(to_ps_file(v, "capacity"))) or -1,
-            })
-        end
+function power.request_info(callback)
+    spawn.easy_async_with_shell("ls " .. pspath .. " | grep -E 'AC|BAT'",
+        function(stdout)
+            local infos = {}
 
-        if i == #devices then callback(infos) end
-    end
+            for name in string.gmatch(stdout, "%w+") do
+                table.insert(infos, {
+                    name = name,
+                    kind = read_line(to_ps_file(name, "type")) or "N/A",
+                    status = read_line(to_ps_file(name, "status")) or "N/A",
+                    is_online = read_line(to_ps_file(name, "online")) == "1" or false,
+                    capacity = tonumber(read_line(to_ps_file(name, "capacity"))) or -1,
+                })
+            end
+
+            callback(infos)
+        end
+    )
 end
 
 function power.current_source(info)
