@@ -28,11 +28,11 @@ end
 local power = {}
 
 function power.request_info(callback)
-    spawn.easy_async_with_shell("ls " .. pspath .. " | grep -E 'AC|BAT'",
-        function(stdout)
+    spawn.easy_async_with_shell("ls " .. pspath .. " | grep -e 'AC' -e 'BAT'",
+        function(s)
             local infos = {}
 
-            for name in string.gmatch(stdout, "%w+") do
+            for name in string.gmatch(s, "%w+") do
                 table.insert(infos, {
                     name = name,
                     kind = read_line(to_ps_file(name, "type")) or "N/A",
@@ -48,7 +48,12 @@ function power.request_info(callback)
 end
 
 function power.current_source(info)
-    local source = {}
+    local source = {
+        name = "AC",
+        is_mains = true,
+        is_online = true,
+        is_charging = false,
+    }
 
     for _, v in ipairs(info) do
         if v.kind == "Mains" then

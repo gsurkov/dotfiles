@@ -18,7 +18,7 @@ function battery.new(args)
     function t.update(self)
         power.request_info(function(info)
             local source = power.current_source(info)
-            local label = source.name or "N/A"
+            local label = source.name
 
             if not source.is_mains or source.is_charging then
                 label = string.format("%s:%d%%", label, source.capacity or 0)
