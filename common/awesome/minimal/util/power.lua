@@ -1,4 +1,4 @@
--- Functions for gettin power supply info.
+-- Functions for getting power supply info.
 local spawn = require("awful.spawn")
 local fs = require("gears.filesystem")
 

@@ -6,7 +6,7 @@
 [[ $- != *i* ]] && return
 
 # Add $HOME/.local/bin to $PATH
-export PATH="$PATH:$(du "$HOME/.local/bin/" | cut -f2 | paste -sd ":")"
+export PATH="$PATH:$(du -L "$HOME/.local/bin/" | cut -f2 | paste -sd ":")"
 
 # Default programs
 export EDITOR="nvim"

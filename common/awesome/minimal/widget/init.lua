@@ -1,9 +1,10 @@
 -- A collection of minimal widgets.
 
 return {
-    volume = require("minimal.widget.volume"),
     battery = require("minimal.widget.battery"),
-    taglist = require("minimal.widget.taglist"),
     layoutbox = require("minimal.widget.layoutbox"),
-    separator = require("minimal.widget.separator")
+    separator = require("minimal.widget.separator"),
+    taglist = require("minimal.widget.taglist"),
+    volume = require("minimal.widget.volume"),
+    wireless = require("minimal.widget.wireless"),
 }
