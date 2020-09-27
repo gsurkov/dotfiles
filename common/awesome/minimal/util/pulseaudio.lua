@@ -12,7 +12,7 @@ function pulseaudio.request_default_sink_info(callback)
             local info = {
                 index = tonumber(string.match(s, "index: (%S+)")) or -1,
                 name = string.match(s, "name: (%S+)") or "N/A",
-                muted = string.match(s, "muted: (%S:)") == "yes" or false,
+                muted = string.match(s, "muted: (%S+)") == "yes" or false,
             }
 
             local channels = {}
