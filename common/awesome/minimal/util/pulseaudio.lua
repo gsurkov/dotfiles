@@ -4,28 +4,28 @@ local spawn = require("awful.spawn")
 local pulseaudio = {}
 
 function pulseaudio.request_default_sink_info(callback)
-    local cmd = "pacmd list-sinks | awk '/\\tindex:/ {is_default=0} /* index:/ {print $3; is_default=1;}\
-                is_default && /name:/ {gsub(\"[<,>]\", \"\", $2); print $2}\
-                is_default && /\\tvolume:/ {gsub(\"%\", \"\"); OFS=\"\\n\"; print $5, $12}\
-                is_default && /muted:/ {print ($2==\"yes\")}'"
+    local cmd = "pacmd list-sinks | sed -n -e '/*/,/index:/!d' -e '/index:/p' -e '/name:/p' -e '/base volume:/d' -e '/volume:/p' -e '/muted:/p'"
 
     spawn.easy_async_with_shell(
         cmd,
-        function(str)
-            local tokens = {}
-            for token in string.gmatch(str, "[^%s]+") do
-                table.insert(tokens, token)
+        function(s)
+            local info = {
+                index = tonumber(string.match(s, "index: (%S+)")) or -1,
+                name = string.match(s, "name: (%S+)") or "N/A",
+                muted = string.match(s, "muted: (%S:)") == "yes" or false,
+            }
+
+            local channels = {}
+            for token in string.gmatch(s, ":.-(%d+)%%") do
+                table.insert(channels, token)
             end
 
-            local info = {
-                index = tonumber(tokens[1]) or -1,
-                name = tokens[2] or "N/A",
-                volume = {
-                    left = tonumber(tokens[3]) or -1,
-                    right = tonumber(tokens[4]) or -1,
-                },
-                muted = (tonumber(tokens[5]) or 1) ~= 0
+            local volume = {
+                left = tonumber(channels[1]) or -1,
+                right = tonumber(channels[2]) or -1,
             }
+
+            info.volume = volume
 
             callback(info)
         end
