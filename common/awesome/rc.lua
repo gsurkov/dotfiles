@@ -59,12 +59,25 @@ local function set_wallpaper(s)
 end
 
 -- Create persistent widgets
-local separator = minimal.widget.separator("|")
--- local keyboardlayout = awful.widget.keyboardlayout()
+local kbd = wibox.widget.textbox()
 local textclock = wibox.widget.textclock("%a %b %d %H:%M")
+
+local separator = minimal.widget.separator("|")
 local wireless = minimal.widget.wireless { timeout = 15 }
 local volume = minimal.widget.volume()
 local battery = minimal.widget.battery { timeout = 15 }
+
+-- Keyboard layouts
+local kbdlayouts = { "us", "ru", }
+
+-- Function to set keyboard layout
+local function set_keyboard_layout(layout_idx)
+    local layout_name = kbdlayouts[layout_idx] or "us"
+    kbd.text = layout_name
+    awful.spawn("setxkbmap " .. layout_name)
+end
+
+set_keyboard_layout(1)
 
 -- Configure workspace
 awful.screen.connect_for_each_screen(function(s)
@@ -106,8 +119,8 @@ awful.screen.connect_for_each_screen(function(s)
         {
             -- Right widgets
             {
+                kbd,
                 textclock,
-                --keyboardlayout,
                 wireless.widget,
                 volume.widget,
                 battery.widget,
@@ -146,8 +159,7 @@ local globalkeys = gears.table.join(
     awful.key({modkey, "Shift"}, "h", function() awful.tag.incnmaster(1, nil, true) end),
     awful.key({modkey, "Shift"}, "l", function() awful.tag.incnmaster(-1, nil, true) end),
 
-    awful.key({modkey}, "space", function() awful.layout.inc(1) end),
-    awful.key({modkey, "Shift"}, "space", function() awful.layout.inc(-1) end),
+    awful.key({modkey, "Shift"}, "space", function() awful.layout.inc(1) end),
 
     -- Program commands
     awful.key({modkey}, "Return", function() awful.spawn(terminal) end),
@@ -217,6 +229,18 @@ local clientkeys = gears.table.join(
     awful.key({modkey}, "m", function (c)
         c.maximized = not c.maximized
         c:raise()
+    end),
+
+    -- Change keyboard layout
+    awful.key({modkey}, "space", function(c)
+        c.kbdlayout_idx = (c.kbdlayout_idx or 1) + 1
+
+        if c.kbdlayout_idx > #kbdlayouts then
+            c.kbdlayout_idx = 1
+        end
+
+        set_keyboard_layout(c.kbdlayout_idx)
+
     end)
 )
 
@@ -278,7 +302,13 @@ awful.rules.rules = {
         properties = {
             floating = true
         }
-    }
+    },
+
+    -- Spawn Firefox on tag 9
+    {
+        rule = { class = "firefox" },
+        properties = { screen = 1, tag = "9" }
+    },
 }
 
 -- Connect singnals
@@ -286,3 +316,5 @@ screen.connect_signal("property:geometry", set_wallpaper)
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+
+client.connect_signal("focus", function(c) set_keyboard_layout(c.kbdlayout_idx or 1) end)
