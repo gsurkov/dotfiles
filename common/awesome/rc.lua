@@ -2,10 +2,6 @@
 local awful = require("awful")
 local gears = require("gears")
 
--- Additional 3rd-party widgets
-local lain = require("lain")
-local vicious = require("vicious")
-
 -- Enable autofocus
 local autofocus = require("awful.autofocus")
 
@@ -20,20 +16,11 @@ beautiful.init(gears.filesystem.get_configuration_dir() .. "themes/dwm/theme.lua
 local minimal = require("minimal")
 
 -- Default applications
-local terminal = "alacritty"
-local browser = "firefox"
-local editor = os.getenv("EDITOR")
+local terminal = os.getenv("TERMINAL") or "xterm"
+local browser = os.getenv("BROWSER") or "firefox"
+local editor = os.getenv("EDITOR") or "nano"
 
-local runner = string.format(
-    "dmenu_run -h %d -fn '%s:size=%d' -nb '%s' -nf '%s' -sb '%s' -sf '%s'",
-    beautiful.wibar_height,
-    beautiful.font_family,
-    beautiful.font_size,
-    beautiful.bg_normal,
-    beautiful.fg_normal,
-    beautiful.bg_focus,
-    beautiful.fg_focus
-)
+local rofi = "rofi -show drun -dpi 1"
 
 -- Logo key
 local modkey = "Mod4"
@@ -74,7 +61,7 @@ local kbdlayouts = { "us", "ru", }
 local function set_keyboard_layout(layout_idx)
     local layout_name = kbdlayouts[layout_idx] or "us"
     kbd.text = layout_name
-    awful.spawn("setxkbmap " .. layout_name)
+    awful.spawn("setxkbmap " .. layout_name, false)
 end
 
 set_keyboard_layout(1)
@@ -163,7 +150,7 @@ local globalkeys = gears.table.join(
 
     -- Program commands
     awful.key({modkey}, "Return", function() awful.spawn(terminal) end),
-    awful.key({modkey}, "p", function() awful.spawn(runner) end)
+    awful.key({modkey}, "p", function() awful.spawn(rofi) end)
 )
 
 -- Tag key bindings

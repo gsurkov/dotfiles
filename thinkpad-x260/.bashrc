@@ -10,7 +10,7 @@ export PATH="$PATH:$(du -L "$HOME/.local/bin/" | cut -f2 | paste -sd ":")"
 
 # Default programs
 export EDITOR="nvim"
-export TERMINAL="st"
+export TERMINAL="alacritty"
 export BROWSER="firefox"
 
 # $HOME cleanup
