@@ -2,6 +2,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'neoclide/coc.nvim', {'branch' : 'release'}
 Plug 'scrooloose/nerdtree'
+Plug 'sonph/onehalf', {'rtp': 'vim/'}
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
@@ -13,6 +14,7 @@ filetype plugin indent on
 
 " Colour scheme
 " colorscheme codedark
+colorscheme onehalfdark
 
 " General settings
 set tabstop=4
@@ -39,6 +41,13 @@ set mouse=nicr
 set shortmess+=c
 set encoding=utf-8
 set clipboard+=unnamed
+set signcolumn=yes
+
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
 
 " Vertical splits
 hi VertSplit cterm=NONE ctermfg=2
@@ -55,7 +64,7 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
 " Airline
-let g:airline_theme='term'
+let g:airline_theme='onehalfdark'
 let g:airline_powerline_fonts=1
 
 " NERDTree key bindings
