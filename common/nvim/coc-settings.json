@@ -2,8 +2,8 @@
     "languageserver": {
         "clangd": {
             "command": "clangd",
-            "rootPatterns": ["compile_flags.txt", "compile_commands.json"],
-            "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp"],
+            "rootPatterns": ["compile_flags.txt", "compile_commands.json", ".git"],
+            "filetypes": ["c", "cc", "cpp", "cxx"],
             "args":[
                     "--compile-commands-dir=build",
                     "--compile_args_from=filesystem",
