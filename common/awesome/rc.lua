@@ -77,6 +77,8 @@ local function notify_input_language(idx)
     naughty.notify {
         text = lang,
         position = "bottom_middle",
+        font = "monospace 16",
+        border_width = 0,
         timeout = 1
     }
 end
@@ -168,7 +170,24 @@ local globalkeys = gears.table.join(
 
     -- Program commands
     awful.key({modkey}, "Return", function() awful.spawn(terminal) end),
-    awful.key({modkey}, "p", function() awful.spawn(launcher) end)
+    awful.key({modkey}, "p", function() awful.spawn(launcher) end),
+
+    -- Audio & Music controls
+    awful.key({}, "XF86AudioNex", function() awful.spawn("mpc next", false) end),
+    awful.key({}, "XF86AudioPrev", function() awful.spawn("mpc prev", false) end),
+    awful.key({}, "XF86AudioPlay", function() awful.spawn("mpc toggle", false) end),
+
+    awful.key({}, "XF86AudioRaiseVolume", function()
+        awful.spawn.easy_async("pulsemixer --change-volume +3", function()
+            volume:update()
+        end)
+    end),
+
+    awful.key({}, "XF86AudioLowerVolume", function()
+        awful.spawn.easy_async("pulsemixer --change-volume -3", function()
+            volume:update()
+        end)
+    end)
 )
 
 -- Tag key bindings

@@ -2,3 +2,4 @@ configuration {
     font: "monospace 10";
     modi: "run,drun,window";
 }
+@import "/usr/share/rofi/themes/Arc-Dark.rasi"
