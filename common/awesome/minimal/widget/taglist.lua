@@ -14,7 +14,7 @@ function taglist.new(args)
     t.widget = awful.widget.taglist {
         screen = args.screen,
         buttons = args.buttons,
-        filter = awful.widget.taglist.filter.all,
+        filter = args.noempty and awful.widget.taglist.filter.noempty or awful.widget.taglist.filter.all,
 
         widget_template = {
             -- Colored background

@@ -1,6 +1,7 @@
 -- Standard Awesome library
 local awful = require("awful")
 local gears = require("gears")
+local naughty = require("naughty")
 
 -- Enable autofocus
 local autofocus = require("awful.autofocus")
@@ -20,7 +21,8 @@ local terminal = os.getenv("TERMINAL") or "xterm"
 local browser = os.getenv("BROWSER") or "firefox"
 local editor = os.getenv("EDITOR") or "nano"
 
-local rofi = "rofi -show drun -dpi 1"
+local launcher = "rofi -show drun -dpi 1"
+local menu = "rofi -dmenu -dpi 1"
 
 -- Logo key
 local modkey = "Mod4"
@@ -45,6 +47,10 @@ local function set_wallpaper(s)
     end
 end
 
+function trim(s)
+   return string.match(s, "^%s*(.*%S)") or ""
+end
+
 -- Create persistent widgets
 local kbd = wibox.widget.textbox()
 local textclock = wibox.widget.textclock("%a %b %d %H:%M")
@@ -55,16 +61,27 @@ local volume = minimal.widget.volume()
 local battery = minimal.widget.battery { timeout = 15 }
 
 -- Keyboard layouts
-local kbdlayouts = { "us", "ru", }
+local languages = { "us", "ru", "fr", "de", "cz" }
 
 -- Function to set keyboard layout
-local function set_keyboard_layout(layout_idx)
-    local layout_name = kbdlayouts[layout_idx] or "us"
-    kbd.text = layout_name
-    awful.spawn("setxkbmap " .. layout_name, false)
+local function set_input_language(idx)
+    local lang = languages[idx] or "us"
+
+    kbd.text = lang
+    awful.spawn("setxkbmap " .. lang .. ",us", false)
 end
 
-set_keyboard_layout(1)
+local function notify_input_language(idx)
+    local lang = languages[idx] or "???"
+
+    naughty.notify {
+        text = lang,
+        position = "bottom_middle",
+        timeout = 1
+    }
+end
+
+set_input_language(1)
 
 -- Configure workspace
 awful.screen.connect_for_each_screen(function(s)
@@ -77,6 +94,7 @@ awful.screen.connect_for_each_screen(function(s)
     -- Taglist
     s.taglist = minimal.widget.taglist {
         buttons = taglist_buttons,
+        noempty = true,
         screen = s
     }
 
@@ -146,11 +164,11 @@ local globalkeys = gears.table.join(
     awful.key({modkey, "Shift"}, "h", function() awful.tag.incnmaster(1, nil, true) end),
     awful.key({modkey, "Shift"}, "l", function() awful.tag.incnmaster(-1, nil, true) end),
 
-    awful.key({modkey, "Shift"}, "space", function() awful.layout.inc(1) end),
+    -- awful.key({modkey, "Shift"}, "space", function() awful.layout.inc(1) end),
 
     -- Program commands
     awful.key({modkey}, "Return", function() awful.spawn(terminal) end),
-    awful.key({modkey}, "p", function() awful.spawn(rofi) end)
+    awful.key({modkey}, "p", function() awful.spawn(launcher) end)
 )
 
 -- Tag key bindings
@@ -218,15 +236,42 @@ local clientkeys = gears.table.join(
         c:raise()
     end),
 
-    -- Change keyboard layout
+    -- Change primary keyboard layout
     awful.key({modkey}, "space", function(c)
-        c.kbdlayout_idx = (c.kbdlayout_idx or 1) + 1
-
-        if c.kbdlayout_idx > #kbdlayouts then
-            c.kbdlayout_idx = 1
+        if c.language_idx and c.language_idx > 1 then
+            c.language_idx = 1
+        else
+            c.language_idx = 2
         end
 
-        set_keyboard_layout(c.kbdlayout_idx)
+        set_input_language(c.language_idx)
+        notify_input_language(c.language_idx)
+
+    end),
+
+    -- Change secondary keyboard layout
+    awful.key({modkey, "Shift"}, "space", function(c)
+        local langs = ""
+
+        for i=3,#languages do
+            langs = langs .. languages[i]
+
+            if i < #languages then
+                langs = langs .. "\n"
+            end
+        end
+
+        cmd = "echo -e \"" .. langs .. "\" | " .. menu
+
+        awful.spawn.easy_async_with_shell(cmd, function(stdout)
+            for i, v in ipairs(languages) do
+                if v == trim(stdout) then
+                    c.language_idx = i
+                    set_input_language(c.language_idx)
+                    notify_input_language(c.language_idx)
+                end
+            end
+        end)
 
     end)
 )
@@ -304,4 +349,4 @@ screen.connect_signal("property:geometry", set_wallpaper)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 
-client.connect_signal("focus", function(c) set_keyboard_layout(c.kbdlayout_idx or 1) end)
+client.connect_signal("focus", function(c) set_input_language(c.language_idx or 1) end)

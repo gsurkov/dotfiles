@@ -31,14 +31,14 @@ theme.wibar_height = dpi(20)
 theme.taglist_margin = dpi(9)
 theme.separator_margin = dpi(6)
 
-local taglist_square_size = dpi(4)
-local taglist_square_margin = dpi(2)
-
-theme.taglist_squares_sel = theme_assets.taglist_squares_sel(
-    taglist_square_size, taglist_square_margin, theme.fg_focus
-)
-theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
-    taglist_square_size, taglist_square_margin, theme.fg_normal
-)
+-- local taglist_square_size = dpi(4)
+-- local taglist_square_margin = dpi(2)
+--
+-- theme.taglist_squares_sel = theme_assets.taglist_squares_sel(
+--     taglist_square_size, taglist_square_margin, theme.fg_focus
+-- )
+-- theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
+--     taglist_square_size, taglist_square_margin, theme.fg_normal
+-- )
 
 return theme
