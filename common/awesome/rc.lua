@@ -102,10 +102,6 @@ awful.screen.connect_for_each_screen(function(s)
 
     s.panel = awful.wibar {
         position = "top",
-    screen = s
-}
-
-    s.layoutbox = minimal.widget.layoutbox {
         screen = s
     }
 
@@ -115,7 +111,6 @@ awful.screen.connect_for_each_screen(function(s)
         {
             -- Left widgets
             s.taglist.widget,
-            s.layoutbox.widget,
 
             spacing = beautiful.taglist_margin,
             layout = wibox.layout.fixed.horizontal,
@@ -171,6 +166,7 @@ local globalkeys = gears.table.join(
     -- Program commands
     awful.key({modkey}, "Return", function() awful.spawn(terminal) end),
     awful.key({modkey}, "p", function() awful.spawn(launcher) end),
+    awful.key({modkey}, "m", function() awful.spawn(terminal .. " --class alacritty-float -e ncmpcpp") end),
 
     -- Audio & Music controls
     awful.key({}, "XF86AudioNex", function() awful.spawn("mpc next", false) end),
@@ -244,13 +240,13 @@ local clientkeys = gears.table.join(
     end),
 
     awful.key({modkey, "Shift"}, "c", function (c) c:kill() end),
-    awful.key({modkey, "Control" }, "space",  awful.client.floating.toggle),
-    awful.key({modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
+    awful.key({modkey, "Control"}, "space",  awful.client.floating.toggle),
+    awful.key({modkey, "Control"}, "Return", function (c) c:swap(awful.client.getmaster()) end),
 
-    awful.key({modkey}, "t", function (c) c.ontop = not c.ontop end),
-    awful.key({modkey}, "n", function (c) c.minimized = true end),
+    awful.key({modkey, "Shift"}, "t", function (c) c.ontop = not c.ontop end),
+    awful.key({modkey, "Shift"}, "n", function (c) c.minimized = true end),
 
-    awful.key({modkey}, "m", function (c)
+    awful.key({modkey, "Shift"}, "m", function (c)
         c.maximized = not c.maximized
         c:raise()
     end),
@@ -326,7 +322,7 @@ awful.rules.rules = {
             focus = awful.client.focus.filter,
             border_width = beautiful.border_width,
             border_color = beautiful.border_normal,
-            placement = awful.placement.no_overlap + awful.placement.no_offscreen
+            placement = awful.placement.no_offscreen + awful.placement.centered
         }
     },
 
@@ -334,7 +330,7 @@ awful.rules.rules = {
     {
         rule_any = {
             instance = {
-                "test"
+                "alacritty-float"
             },
 
             class = {
@@ -355,17 +351,36 @@ awful.rules.rules = {
         }
     },
 
-    -- Spawn Firefox on tag 9
+    -- Spawn Firefox on tag 2
     {
         rule = { class = "firefox" },
-        properties = { screen = 1, tag = "9" }
+        properties = { screen = 1, tag = "2" }
+    },
+
+    -- Spawn Blender on tag 3
+    {
+        rule = { class = "Blender" },
+        properties = { screen = 1, tag = "3" }
     },
 }
 
 -- Connect singnals
 screen.connect_signal("property:geometry", set_wallpaper)
 
-client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
+-- Enable sloppy focus, so that focus follows mouse.
+client.connect_signal("mouse::enter", function(c)
+    c:emit_signal("request::activate", "mouse_enter", {raise = false})
+end)
+
+-- Dark border on a single window
+client.connect_signal("focus", function(c)
+    if #c.screen.clients == 1 then
+        c.border_color = beautiful.border_normal
+    else
+        c.border_color = beautiful.border_focus
+    end
+end)
+
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 
 client.connect_signal("focus", function(c) set_input_language(c.language_idx or 1) end)
