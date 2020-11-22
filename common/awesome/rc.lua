@@ -11,7 +11,7 @@ local wibox = require("wibox")
 
 -- Themes
 local beautiful = require("beautiful")
-beautiful.init(gears.filesystem.get_configuration_dir() .. "themes/dwm/theme.lua")
+beautiful.init(gears.filesystem.get_configuration_dir() .. "themes/onehalf/theme.lua")
 
 -- Custom widgets
 local minimal = require("minimal")
@@ -334,7 +334,7 @@ awful.rules.rules = {
             },
 
             class = {
-                "test"
+                "mpv"
             },
 
             name = {
