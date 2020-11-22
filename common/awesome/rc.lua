@@ -42,7 +42,9 @@ local taglist_buttons = gears.table.join(
 
 -- Helper functions
 local function set_wallpaper(s)
-    if beautiful.wallpaper then
+    if(beautiful.wallpaper_color) then
+        gears.wallpaper.set(beautiful.wallpaper_color)
+    elseif beautiful.wallpaper then
         gears.wallpaper.maximized(beautiful.wallpaper, s, true)
     end
 end

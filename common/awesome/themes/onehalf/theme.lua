@@ -5,7 +5,8 @@ local fs = require("gears.filesystem")
 
 local theme = {}
 
-theme.wallpaper = fs.get_configuration_dir() .. "themes/onehalf/wallpaper.jpg"
+--theme.wallpaper = fs.get_configuration_dir() .. "themes/onehalf/wallpaper.jpg"
+theme.wallpaper_color = "#2c303d"
 
 theme.font_family = "monospace"
 theme.font_size = 10
