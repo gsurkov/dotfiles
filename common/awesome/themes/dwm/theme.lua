@@ -26,7 +26,7 @@ theme.border_focus  = theme.bg_focus
 theme.useless_gap   = dpi(0)
 theme.border_width  = dpi(1)
 
-theme.wibar_height = dpi(20)
+theme.wibar_height = dpi(19)
 
 theme.taglist_margin = dpi(9)
 theme.separator_margin = dpi(6)
