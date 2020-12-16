@@ -35,5 +35,9 @@ fi
 export MOZ_X11_EGL=1
 
 xcalib -o eDP-1 ~/Calibrations/eDP-1.icc &
-# picom &
-exec awesome
+hsetroot -solid '#2c303d' &
+picom -b
+perWindowLayoutD
+#kbdd-run &
+
+exec spectrwm
