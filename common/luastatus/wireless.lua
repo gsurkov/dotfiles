@@ -6,7 +6,14 @@ widget = {
     },
 
     cb = function(t)
-        local signal_dbm = t.wlp4s0.wireless.signal_dbm
+        local signal_dbm
+
+        for k, v in pairs(t) do
+            if string.find(k, "wlp") then
+                signal_dbm = v.wireless.signal_dbm
+                break
+            end
+        end
 
         if signal_dbm then
             signal_dbm = signal_dbm .. "dBm"
