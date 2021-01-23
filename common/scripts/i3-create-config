@@ -1,5 +1,5 @@
 #!/bin/bash
-i3_folder="$XDG_CONFIG_HOME/i3"
+i3_folder="$XDG_CONFIG_HOME/${1:-i3}"
 i3_config_file="$i3_folder/config"
 i3_config_dir="$i3_folder/config.d"
 i3_includes_file="$i3_config_dir/i3_configs.conf"
