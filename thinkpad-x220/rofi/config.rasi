@@ -1,5 +1,5 @@
 configuration {
-    font: "Terminus 8";
+    font: "Monospace 10";
     modi: "run,drun,window";
 }
 @import "/usr/share/rofi/themes/Arc-Dark.rasi"

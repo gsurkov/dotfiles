@@ -35,7 +35,7 @@ fi
 export MOZ_X11_EGL=1
 
 dunst &
-hsetroot -solid '#2c303d' &
+hsetroot -cover "$HOME/Pictures/Wallpapers/Hilltopper (Final).png" &
 picom -b
 perWindowLayoutD
 i3-create-config
