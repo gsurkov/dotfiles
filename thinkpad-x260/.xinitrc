@@ -38,6 +38,6 @@ xcalib -o eDP-1 ~/Calibrations/eDP-1.icc &
 hsetroot -solid '#2c303d' &
 picom -b
 perWindowLayoutD
-#kbdd-run &
+i3-create-config
 
-exec spectrwm
+exec i3
