@@ -1,5 +1,6 @@
 call plug#begin('~/.local/share/nvim/plugged')
 
+Plug 'lervag/vimtex'
 Plug 'neoclide/coc.nvim', {'branch' : 'release'}
 Plug 'scrooloose/nerdtree'
 Plug 'sonph/onehalf', {'rtp': 'vim/'}
