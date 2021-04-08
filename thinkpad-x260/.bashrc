@@ -42,5 +42,5 @@ alias ip="ip --color=auto"
 alias vim="nvim"
 
 # Program settings
-export NN_OPTS='edE'
-export QT_STYLE_OVERRIDE='Adwaita-Dark'
+export NNN_OPTS='edE'
+export QT_QPA_PLATFORMTHEME='qt5ct'
