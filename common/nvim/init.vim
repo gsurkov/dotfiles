@@ -1,6 +1,7 @@
 call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'lervag/vimtex'
+Plug 'peterhoeg/vim-qml' 
 Plug 'neoclide/coc.nvim', {'branch' : 'release'}
 Plug 'scrooloose/nerdtree'
 Plug 'sonph/onehalf', {'rtp': 'vim/'}
@@ -49,6 +50,10 @@ if exists('+termguicolors')
   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
   set termguicolors
 endif
+
+" Transparent background
+hi Normal guibg=NONE ctermbg=NONE
+hi LineNr guibg=NONE ctermbg=NONE
 
 " Vertical splits
 hi VertSplit cterm=NONE ctermfg=2
